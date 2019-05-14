@@ -1,34 +1,64 @@
-var words = ["cat", "marmoset", "scorpion", "bunny rabbit", "aye-aye", "babbot worm"];
-// pick a word
-word = words[Math.floor(Math.random() * words.length)];
-var answerArr = [];
-// put down spaces
-for (var i = 0; i < word.length; i++){
-    answerArr[i] = "_";
+var $ = function(id){
+    return document.getElementById(id);
 }
-// how many letters left
-var remainingLetters = word.length;
+var game = ["January", "February", "March", "April", "May"];
+var choice = [Math.floor(Math.random() * game.length)];
+var answer = game[choice];
+var myLength = answer.length;
+var display = [myLength];
+var win = myLength;
+var letters = answer.split('');
+var attemptsLeft = 10;
+var output ="";
+var userLetter ="";
 
-//   ************************  The Game ***************************** //
 
-while (remainingLetters > 0){
-    alert(answerArr.join(" "));
 
-    var guess = prompt("guess a letter or press cancel to stop playing");
-
-    if (guess == null){
-        break;
-    } else if (guess.length !== 1){
-        alert("please enter a single letter");
-    } else {
-        for(var j = 0; j < word.length; j++){
-            if (word[j] === guess){
-                answerArr[j] = guess;
-                remainingLetters --;
-            }
-        }
+var setup = function(){
+    for ( i = 0; i < answer.length; i++)
+    { display[i] = "_ ";
+    output = output + display[i];
     }
-    //     ********************************** end of gameloop  ***********************//
+    document.getElementById("game").innerHTML = output;
+    output = "";
 }
-alert(answerArr.join(" "));
-alert("good job, the answer was " + word);
+
+window.onload = function{
+    setup();
+}
+
+var submit = function(){
+
+    output = "";
+    userLetter=$("letter").value;
+    $("letter").value = "";
+
+    for (var c = 0; c < answer.length; c++)
+    {
+        if(userLetter.toUpperCase() == letters[c])
+        {display[c] = userLetter.toUpperCase();
+         win--;
+        }
+
+        output = output + display[c] + " ";
+    }
+}
+
+document.getElementById("game").innerHTML = output;
+output = "";
+attemptsLeft--;
+
+if (win < 1){
+    document.getElementById("guesses").innerHTML = "YOU WIN!!";
+}
+else if (attemptsLeft < 1){
+    document.getElementById("guesses").innerHTML = "YOU LOSE!!";
+}
+else{
+    document.getElementById("guesses").innerHTML = "You have " + attemptsLeft + " guesses left";
+}
+
+window.onload = function(){
+    setup();
+    $("submit").onclick = submit;
+}
